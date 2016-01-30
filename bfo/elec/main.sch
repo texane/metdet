@@ -7824,8 +7824,7 @@ https://en.wikipedia.org/wiki/Colpitts_oscillator
 Figure 3</text>
 <text x="114.3" y="58.42" size="1.778" layer="97">Actually an Arduino NANO 3.0 used</text>
 <text x="109.22" y="-40.64" size="1.778" layer="94">https://github.com/texane/metdet/bfo</text>
-<text x="38.1" y="60.96" size="1.778" layer="97">AC sine to 0 - VREG square stage
-Signal is inverted</text>
+<text x="38.1" y="58.42" size="1.778" layer="97">AC sine to logic (0 - VREG, inverted)</text>
 </plain>
 <instances>
 <instance part="C1" gate="G$1" x="17.78" y="48.26"/>
