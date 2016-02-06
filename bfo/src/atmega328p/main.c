@@ -138,24 +138,99 @@ static inline uint32_t hfc_to_hz(uint32_t counter)
 }
 
 
+/* pwm as piezo driver */
+/* use portd6, d6 */
+
+#define PWM_N_MIN 10
+#define PWM_N_MAX 100
+
+#define PWM_FLAG_START (1 << 0)
+static uint8_t pwm_flags = 0;
+static uint8_t pwm_n = 0;
+
+static void pwm_update(uint8_t n)
+{
+  TCNT0 = 0;
+  OCR0A = n / 2;
+}
+
+static void pwm_start(uint8_t n)
+{
+  TCCR0B = 0;
+
+  DDRD |= 1 << 6;
+
+  pwm_update(n);
+
+  TIMSK0 = 0;
+
+  TCCR0A = (1 << 6) | (1 << 1);
+  TCCR0B = (1 << 3) | (5 << 0);
+}
+
+static void pwm_stop(void)
+{
+  TCCR0B = 0;
+}
+
+
 /* main */
 
 int main(void)
 {
+  uint32_t calib_counter;
   uint32_t counter = 0;
   uint32_t prev_counter = 0;
   uint32_t diff;
   const uint8_t* s;
   unsigned int len;
+  uint8_t i;
 
   uart_setup();
 
   sei();
 
+  /* calibrate */
+  calib_counter = 0;
+  for (i = 0; i != 10; ++i) calib_counter += hfc_start_wait();
+  calib_counter /= (uint32_t)i;
+
   /* measure */
   while (1)
   {
     counter = hfc_start_wait();
+
+    if (counter > calib_counter) diff = counter - calib_counter;
+    else diff = calib_counter - counter;
+
+    if (diff > 4)
+    {
+      diff /= 4;
+      diff += 10;
+      if (diff >= PWM_N_MAX) diff = PWM_N_MAX;
+
+      if ((pwm_flags & PWM_FLAG_START) == 0)
+      {
+	pwm_start((uint8_t)diff);
+	pwm_flags |= PWM_FLAG_START;
+
+	uart_write((uint8_t*)"PWM_START\r\n", 11);
+      }
+      else if (pwm_n != (uint8_t)diff)
+      {
+	pwm_update((uint8_t)diff);
+	pwm_n = (uint8_t)diff;
+
+	uart_write((uint8_t*)"PWM_UPDATE\r\n", 12);
+      }
+    }
+    else if (pwm_flags & PWM_FLAG_START)
+    {
+      pwm_stop();
+      pwm_flags &= ~PWM_FLAG_START;
+
+      uart_write((uint8_t*)"PWM_STOP\r\n", 10);
+    }
 
     /* avoid update */
 #if 0
