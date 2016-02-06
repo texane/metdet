@@ -7786,6 +7786,155 @@ high speed (Philips)</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="buzzer">
+<description>&lt;b&gt;Speakers and Buzzers&lt;/b&gt;&lt;p&gt;
+&lt;ul&gt;Distributors:
+&lt;li&gt;Buerklin
+&lt;li&gt;Spoerle
+&lt;li&gt;Schukat
+&lt;/ul&gt;
+&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
+<packages>
+<package name="EFBAA40D101">
+<description>&lt;b&gt;Piezoelectric Acoustic Transducer&lt;/b&gt;&lt;p&gt;
+Source: Panbasonic .. 2SC1685.pdf</description>
+<circle x="0" y="0" radius="8.375" width="0.2032" layer="21"/>
+<pad name="1" x="-5" y="0" drill="1.1" diameter="1.6764"/>
+<pad name="2" x="5" y="0" drill="1.1" diameter="1.6764"/>
+<text x="-3.175" y="3.175" size="1.27" layer="25">&gt;NAME</text>
+<text x="-3.81" y="-3.81" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="7.2" y1="-0.8" x2="8.375" y2="0.8" layer="21"/>
+</package>
+<package name="EFBRD22C41">
+<description>&lt;b&gt;Piezoelectric Acoustic Transducer&lt;/b&gt;&lt;p&gt;
+Source: Panbasonic .. 2SC1685.pdf</description>
+<circle x="0" y="0" radius="10.9" width="0.2032" layer="21"/>
+<pad name="1" x="-5" y="0" drill="1.1" diameter="1.6764"/>
+<pad name="2" x="5" y="0" drill="1.1" diameter="1.6764"/>
+<text x="-3.175" y="3.175" size="1.27" layer="25">&gt;NAME</text>
+<text x="-3.81" y="-3.81" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="9.675" y1="-0.8" x2="10.85" y2="0.8" layer="21"/>
+</package>
+<package name="EFBRD24C411">
+<description>&lt;b&gt;Piezoelectric Acoustic Transducer&lt;/b&gt;&lt;p&gt;
+Source: Panbasonic .. 2SC1685.pdf</description>
+<circle x="0" y="0" radius="11.9" width="0.2032" layer="21"/>
+<pad name="1" x="-5" y="0" drill="1.1" diameter="1.6764"/>
+<pad name="2" x="5" y="0" drill="1.1" diameter="1.6764"/>
+<text x="-3.175" y="3.175" size="1.27" layer="25">&gt;NAME</text>
+<text x="-3.81" y="-3.81" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="10.675" y1="-0.8" x2="11.85" y2="0.8" layer="21"/>
+</package>
+<package name="EFBRD22C413">
+<description>&lt;b&gt;Piezoelectric Acoustic Transducer&lt;/b&gt;&lt;p&gt;
+Source: Panbasonic .. 2SC1685.pdf</description>
+<circle x="0" y="0" radius="10.9" width="0.2032" layer="21"/>
+<pad name="1" x="-5" y="0" drill="1.1" diameter="1.6764"/>
+<pad name="2" x="5" y="0" drill="1.1" diameter="1.6764"/>
+<text x="-3.175" y="3.175" size="1.27" layer="25">&gt;NAME</text>
+<text x="-3.81" y="-3.81" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="9.675" y1="-0.8" x2="10.85" y2="0.8" layer="21"/>
+</package>
+</packages>
+<symbols>
+<symbol name="B2P">
+<wire x1="-1.27" y1="3.175" x2="0" y2="3.175" width="0.1524" layer="94"/>
+<wire x1="0" y1="3.175" x2="0" y2="3.81" width="0.1524" layer="94"/>
+<wire x1="0" y1="3.175" x2="0" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="0.635" y1="4.445" x2="0.635" y2="1.905" width="0.1524" layer="94"/>
+<wire x1="0.635" y1="1.905" x2="1.905" y2="1.905" width="0.1524" layer="94"/>
+<wire x1="1.905" y1="1.905" x2="1.905" y2="4.445" width="0.1524" layer="94"/>
+<wire x1="1.905" y1="4.445" x2="0.635" y2="4.445" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="3.81" x2="2.54" y2="3.175" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="3.175" x2="3.81" y2="3.175" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="3.175" x2="2.54" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="-2.54" x2="2.54" y2="1.27" width="0.1524" layer="94"/>
+<wire x1="0" y1="-2.54" x2="0" y2="1.27" width="0.1524" layer="94"/>
+<wire x1="-2.54" y1="1.27" x2="0" y2="1.27" width="0.254" layer="94"/>
+<wire x1="5.08" y1="1.27" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="5.08" x2="5.715" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.715" y1="5.08" x2="5.715" y2="5.715" width="0.254" layer="94"/>
+<wire x1="5.715" y1="5.715" x2="-3.175" y2="5.715" width="0.254" layer="94"/>
+<wire x1="-3.175" y1="5.715" x2="-3.175" y2="5.08" width="0.254" layer="94"/>
+<wire x1="-3.175" y1="5.08" x2="-2.54" y2="5.08" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="5.08" x2="-2.54" y2="1.27" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="2.54" y1="1.27" x2="5.08" y2="1.27" width="0.254" layer="94"/>
+<wire x1="0" y1="1.27" x2="2.54" y2="1.27" width="0.254" layer="94"/>
+<text x="-2.54" y="6.35" size="1.778" layer="95">&gt;NAME</text>
+<text x="6.35" y="0" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="2" x="5.08" y="-2.54" visible="pad" length="short" direction="pas" rot="R180"/>
+<pin name="1" x="-2.54" y="-2.54" visible="pad" length="short" direction="pas"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="EFB?" prefix="SG">
+<description>&lt;b&gt;Piezoelectric Acoustic Transducer&lt;/b&gt;&lt;p&gt;
+Source: Panbasonic .. 2SC1685.pdf</description>
+<gates>
+<gate name="G$1" symbol="B2P" x="0" y="0"/>
+</gates>
+<devices>
+<device name="AA40D101" package="EFBAA40D101">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="" constant="no"/>
+<attribute name="OC_FARNELL" value="unknown" constant="no"/>
+<attribute name="OC_NEWARK" value="unknown" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="RD22C41" package="EFBRD22C41">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="" constant="no"/>
+<attribute name="OC_FARNELL" value="unknown" constant="no"/>
+<attribute name="OC_NEWARK" value="unknown" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="RD24C411" package="EFBRD24C411">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="" constant="no"/>
+<attribute name="OC_FARNELL" value="unknown" constant="no"/>
+<attribute name="OC_NEWARK" value="unknown" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="RD22C413" package="EFBRD22C413">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="" constant="no"/>
+<attribute name="OC_FARNELL" value="unknown" constant="no"/>
+<attribute name="OC_NEWARK" value="unknown" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -7813,6 +7962,8 @@ high speed (Philips)</description>
 <part name="R5" library="rcl" deviceset="R-US_" device="0204/2V" value="10K"/>
 <part name="Q2" library="transistor-npn" deviceset="BC108B" device=""/>
 <part name="D1" library="diode" deviceset="1N4148" device="DO35-7"/>
+<part name="SG1" library="buzzer" deviceset="EFB?" device="AA40D101"/>
+<part name="SUPPLY2" library="supply2" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -7848,6 +7999,8 @@ Figure 3</text>
 <instance part="R5" gate="G$1" x="63.5" y="27.94" rot="R90"/>
 <instance part="Q2" gate="G$1" x="60.96" y="12.7"/>
 <instance part="D1" gate="G$1" x="40.64" y="2.54" rot="R90"/>
+<instance part="SG1" gate="G$1" x="144.78" y="25.4"/>
+<instance part="SUPPLY2" gate="GND" x="160.02" y="20.32"/>
 </instances>
 <busses>
 </busses>
@@ -7927,6 +8080,11 @@ Figure 3</text>
 <wire x1="111.76" y1="43.18" x2="99.06" y2="43.18" width="0.1524" layer="91"/>
 <label x="99.06" y="43.18" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="SG1" gate="G$1" pin="2"/>
+<wire x1="149.86" y1="22.86" x2="160.02" y2="22.86" width="0.1524" layer="91"/>
+<pinref part="SUPPLY2" gate="GND" pin="GND"/>
+</segment>
 </net>
 <net name="VREG_5V" class="0">
 <segment>
@@ -7993,6 +8151,13 @@ Figure 3</text>
 <wire x1="40.64" y1="12.7" x2="38.1" y2="12.7" width="0.1524" layer="91"/>
 <wire x1="40.64" y1="12.7" x2="40.64" y2="5.08" width="0.1524" layer="91"/>
 <junction x="40.64" y="12.7"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="10"/>
+<pinref part="SG1" gate="G$1" pin="1"/>
+<wire x1="134.62" y1="22.86" x2="142.24" y2="22.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
