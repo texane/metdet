@@ -64,7 +64,7 @@ static void hfc_start(void)
   /* the total acquisition time is given by: */
   /* tacq = tim2_max * 1 / (fcpu / tim2_prescal) */
   /* with: */
-  /* tim2_max =  12500 */
+  /* tim2_max = 12500 */
   /* fcpu = 16MHz */
   /* tim2_prescal = 128 */
   /* tacq = 0.1 */
@@ -175,6 +175,7 @@ static void pwm_start(uint8_t n)
 
 static void pwm_stop(void)
 {
+  TCCR0A = 0;
   TCCR0B = 0;
 }
 
