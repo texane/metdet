@@ -2,7 +2,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-/* #define CONFIG_UART 1 */
+#define CONFIG_UART 1
 #ifdef CONFIG_UART
 #include "./uart.c"
 #endif /* CONFIG_UART */
@@ -131,6 +131,7 @@ static inline uint32_t hfc_start_wait(void)
   return hfc_wait();
 }
 
+__attribute__((unused))
 static inline uint32_t hfc_to_hz(uint32_t counter)
 {
   /* refer to hfc_start notes */
@@ -178,20 +179,27 @@ static void pwm_stop(void)
 }
 
 
+/* calibrate */
+
+static void calibrate(uint32_t* x)
+{
+  uint8_t i;
+
+  *x = 0;
+  for (i = 0; i != 8; ++i) *x += hfc_start_wait();
+  *x /= 8;
+}
+
+
 /* main */
 
 int main(void)
 {
-  uint32_t calib_counter;
-  uint32_t counter = 0;
-  uint32_t prev_counter = 0;
-  uint32_t diff;
-  uint8_t i;
+#define CONFIG_THRESH 2
 
-#ifdef CONFIG_UART
-  const uint8_t* s;
-  unsigned int len;
-#endif /* CONFIG_UART */
+  uint32_t calib_counter;
+  uint32_t counter;
+  uint32_t diff;
 
 #ifdef CONFIG_UART
   uart_setup();
@@ -199,10 +207,14 @@ int main(void)
 
   sei();
 
-  /* calibrate */
-  calib_counter = 0;
-  for (i = 0; i != 10; ++i) calib_counter += hfc_start_wait();
-  calib_counter /= (uint32_t)i;
+  calibrate(&calib_counter);
+
+#ifdef CONFIG_UART
+  /* print calibration counter */
+  uart_write((uint8_t*)"CALIB ", 6);
+  uart_write((uint8_t*)uint32_to_string(calib_counter), 8);
+  uart_write((uint8_t*)"\r\n", 2);
+#endif /* CONFIG_UART */
 
   /* measure */
   while (1)
@@ -212,10 +224,22 @@ int main(void)
     if (counter > calib_counter) diff = counter - calib_counter;
     else diff = calib_counter - counter;
 
-    if (diff > 4)
+    if (diff < CONFIG_THRESH)
     {
-      diff /= 4;
-      diff += 10;
+      if (pwm_flags & PWM_FLAG_START)
+      {
+	pwm_stop();
+	pwm_flags &= ~PWM_FLAG_START;
+
+#ifdef CONFIG_UART
+	uart_write((uint8_t*)"PWM_STOP\r\n", 10);
+#endif /* CONFIG_UART */
+      }
+    }
+    else
+    {
+      /* compute pwm frequency */
+      diff = diff / 4 + 10;
       if (diff >= PWM_N_MAX) diff = PWM_N_MAX;
 
       if ((pwm_flags & PWM_FLAG_START) == 0)
@@ -224,7 +248,9 @@ int main(void)
 	pwm_flags |= PWM_FLAG_START;
 
 #ifdef CONFIG_UART
-	uart_write((uint8_t*)"PWM_START\r\n", 11);
+	uart_write((uint8_t*)"PWM_START ", 10);
+	uart_write((uint8_t*)uint32_to_string(counter), 8);
+	uart_write((uint8_t*)"\r\n", 2);
 #endif /* CONFIG_UART */
       }
       else if (pwm_n != (uint8_t)diff)
@@ -233,50 +259,12 @@ int main(void)
 	pwm_n = (uint8_t)diff;
 
 #ifdef CONFIG_UART
-	uart_write((uint8_t*)"PWM_UPDATE\r\n", 12);
+	uart_write((uint8_t*)"PWM_UPDATE ", 11);
+	uart_write((uint8_t*)uint32_to_string(counter), 8);
+	uart_write((uint8_t*)"\r\n", 2);
 #endif /* CONFIG_UART */
       }
     }
-    else if (pwm_flags & PWM_FLAG_START)
-    {
-      pwm_stop();
-      pwm_flags &= ~PWM_FLAG_START;
-
-#ifdef CONFIG_UART
-      uart_write((uint8_t*)"PWM_STOP\r\n", 10);
-#endif /* CONFIG_UART */
-    }
-
-    /* avoid update */
-#if 0
-    if (counter == prev_counter) continue ;
-#else
-    if (counter > prev_counter) diff = counter - prev_counter;
-    else diff = prev_counter - counter;
-    if (diff < 2) continue ;
-#endif
-
-#ifdef CONFIG_UART
-    /* print counter */
-    s = uint32_to_string(hfc_to_hz(counter));
-    len = 8;
-    uart_write((uint8_t*)s, len);
-    uart_write((uint8_t*)" ticks ", 7);
-#endif /* CONFIG_UART */
-
-#if 0
-    /* print frequency */
-    len = uint32_to_string(f, &s);
-    uart_write((uint8_t*)s, len);
-    uart_write((uint8_t*)" hz\r\n", 5);
-    uart_write((uint8_t*)"\r\n", 2);
-#endif
-
-#ifdef CONFIG_UART
-    uart_write((uint8_t*)"\r\n", 2);
-#endif /* CONFIG_UART */
-
-    prev_counter = counter;
   }
 
   return 0;
