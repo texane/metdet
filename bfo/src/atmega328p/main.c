@@ -149,8 +149,6 @@ static inline uint32_t hfc_to_hz(uint32_t counter)
 #define PWM_N_MIN 10
 #define PWM_N_MAX 100
 
-#define PWM_FLAG_START (1 << 0)
-static uint8_t pwm_flags = 0;
 static uint8_t pwm_n = 0;
 
 __attribute__((unused))
@@ -233,6 +231,12 @@ int main(void)
   uint32_t diff;
   uint32_t thresh;
   uint8_t but;
+  uint8_t hbeat_counter;
+  uint8_t flags;
+
+#define FLAG_THRESH (1 << 0)
+#define FLAG_HBEAT (1 << 1)
+  flags = 0;
 
 #ifdef CONFIG_UART
   uart_setup();
@@ -252,6 +256,8 @@ int main(void)
   uart_write((uint8_t*)"\r\n", 2);
 #endif /* CONFIG_UART */
 
+  hbeat_counter = 0;
+
   /* measure */
   while (1)
   {
@@ -262,12 +268,12 @@ int main(void)
 
     if (diff < thresh)
     {
-      if (pwm_flags & PWM_FLAG_START)
+      if (flags & FLAG_THRESH)
       {
 #ifdef CONFIG_PIEZO
 	pwm_stop();
 #endif /* CONFIG_PIEZO */
-	pwm_flags &= ~PWM_FLAG_START;
+	flags &= ~FLAG_THRESH;
 
 #ifdef CONFIG_UART
 	uart_write((uint8_t*)"PWM_STOP\r\n", 10);
@@ -280,12 +286,12 @@ int main(void)
       diff = diff / 4 + 10;
       if (diff >= PWM_N_MAX) diff = PWM_N_MAX;
 
-      if ((pwm_flags & PWM_FLAG_START) == 0)
+      if ((flags & FLAG_THRESH) == 0)
       {
 #ifdef CONFIG_PIEZO
 	pwm_start((uint8_t)diff);
 #endif /* CONFIG_PIEZO */
-	pwm_flags |= PWM_FLAG_START;
+	flags |= FLAG_THRESH;
 
 #ifdef CONFIG_UART
 	uart_write((uint8_t*)"PWM_START ", 10);
@@ -340,6 +346,22 @@ int main(void)
 #endif /* CONFIG_UART */
     }
 
+    /* heart beat, every 15s (150 as hfc_wait is 0.1s) */
+    if (flags & FLAG_HBEAT)
+    {
+      if ((flags & FLAG_THRESH) == 0) pwm_stop();
+      flags &= ~FLAG_HBEAT;
+    }
+    else if (hbeat_counter == 150)
+    {
+      flags |= FLAG_HBEAT;
+      if ((flags & FLAG_THRESH) == 0) pwm_start(20);
+      hbeat_counter = 0;
+    }
+    else
+    {
+      hbeat_counter += 1;
+    }
   }
 
   return 0;
