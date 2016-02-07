@@ -236,6 +236,7 @@ int main(void)
 
 #define FLAG_THRESH (1 << 0)
 #define FLAG_HBEAT (1 << 1)
+#define FLAG_ERROR (1 << 2)
   flags = 0;
 
 #ifdef CONFIG_UART
@@ -262,6 +263,28 @@ int main(void)
   while (1)
   {
     counter = hfc_start_wait();
+
+    /* handle error (coil disconnected ...) */
+    if (counter == 0)
+    {
+      if ((flags & FLAG_ERROR) == 0)
+      {
+	/* overwrite other flags */
+	pwm_start(20);
+	flags = FLAG_ERROR;
+
+#ifdef CONFIG_UART
+	uart_write((uint8_t*)"ERROR\r\n", 7);
+#endif /* CONFIG_UART */
+      }
+
+      continue ;
+    }
+    else if (flags & FLAG_ERROR)
+    {
+      pwm_stop();
+      flags = 0;
+    }
 
     if (counter > calib_counter) diff = counter - calib_counter;
     else diff = calib_counter - counter;
