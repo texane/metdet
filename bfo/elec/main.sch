@@ -7971,10 +7971,10 @@ Figure 3</text>
 <text x="38.1" y="58.42" size="1.778" layer="97">AC sine to logic (0 - VREG, inverted)</text>
 <text x="116.84" y="0" size="1.778" layer="97" align="center-right">piezo-</text>
 <text x="116.84" y="-2.54" size="1.778" layer="97" align="center-right">piezo+</text>
-<text x="116.84" y="-5.08" size="1.778" layer="97" align="center-right">but_plus</text>
-<text x="116.84" y="-7.62" size="1.778" layer="97" align="center-right">but_plus</text>
-<text x="116.84" y="-10.16" size="1.778" layer="97" align="center-right">but_minus</text>
-<text x="116.84" y="-12.7" size="1.778" layer="97" align="center-right">but_minus</text>
+<text x="116.84" y="-10.16" size="1.778" layer="97" align="center-right">but_plus</text>
+<text x="116.84" y="-12.7" size="1.778" layer="97" align="center-right">but_plus</text>
+<text x="116.84" y="-5.08" size="1.778" layer="97" align="center-right">but_minus</text>
+<text x="116.84" y="-7.62" size="1.778" layer="97" align="center-right">but_minus</text>
 <text x="116.84" y="-15.24" size="1.778" layer="97" align="center-right">but_cal</text>
 <text x="116.84" y="-17.78" size="1.778" layer="97" align="center-right">but_cal</text>
 </plain>

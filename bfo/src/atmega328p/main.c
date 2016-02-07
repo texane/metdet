@@ -2,7 +2,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define CONFIG_UART
+/* #define CONFIG_UART */
 #ifdef CONFIG_UART
 #include "./uart.c"
 #endif /* CONFIG_UART */
@@ -190,8 +190,8 @@ static void pwm_stop(void)
 #define BUT_PORT PORTD
 #define BUT_PIN PIND
 #define BUT_CALIB_MASK (1 << 2)
-#define BUT_MINUS_MASK (1 << 3)
-#define BUT_PLUS_MASK (1 << 4)
+#define BUT_PLUS_MASK (1 << 3)
+#define BUT_MINUS_MASK (1 << 4)
 #define BUT_ALL_MASK (BUT_CALIB_MASK | BUT_MINUS_MASK | BUT_PLUS_MASK)
 
 static void but_setup(void)
@@ -224,12 +224,14 @@ static void calibrate(uint32_t* x)
 
 int main(void)
 {
-#define CONFIG_THRESH 2
-/* #define CONFIG_PIEZO */
+#define CONFIG_THRESH_MIN 2
+#define CONFIG_THRESH_MAX 30
+#define CONFIG_PIEZO
 
   uint32_t calib_counter;
   uint32_t counter;
   uint32_t diff;
+  uint32_t thresh;
   uint8_t but;
 
 #ifdef CONFIG_UART
@@ -241,6 +243,7 @@ int main(void)
   sei();
 
   calibrate(&calib_counter);
+  thresh = CONFIG_THRESH_MIN;
 
 #ifdef CONFIG_UART
   /* print calibration counter */
@@ -257,7 +260,7 @@ int main(void)
     if (counter > calib_counter) diff = counter - calib_counter;
     else diff = calib_counter - counter;
 
-    if (diff < CONFIG_THRESH)
+    if (diff < thresh)
     {
       if (pwm_flags & PWM_FLAG_START)
       {
@@ -314,7 +317,29 @@ int main(void)
 #endif /* CONFIG_UART */
 
       calibrate(&calib_counter);
+      thresh = CONFIG_THRESH_MIN;
     }
+    else if (but & BUT_PLUS_MASK)
+    {
+      if (thresh < CONFIG_THRESH_MAX) thresh += 1;
+
+#ifdef CONFIG_UART
+	uart_write((uint8_t*)"THRESH ", 7);
+	uart_write((uint8_t*)uint32_to_string(thresh), 8);
+	uart_write((uint8_t*)"\r\n", 2);
+#endif /* CONFIG_UART */
+    }
+    else if (but & BUT_MINUS_MASK)
+    {
+      if (thresh > CONFIG_THRESH_MIN) thresh -= 1;
+
+#ifdef CONFIG_UART
+	uart_write((uint8_t*)"THRESH ", 7);
+	uart_write((uint8_t*)uint32_to_string(thresh), 8);
+	uart_write((uint8_t*)"\r\n", 2);
+#endif /* CONFIG_UART */
+    }
+
   }
 
   return 0;
