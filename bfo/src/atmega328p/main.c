@@ -2,7 +2,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define CONFIG_UART 1
+#define CONFIG_UART
 #ifdef CONFIG_UART
 #include "./uart.c"
 #endif /* CONFIG_UART */
@@ -153,12 +153,14 @@ static inline uint32_t hfc_to_hz(uint32_t counter)
 static uint8_t pwm_flags = 0;
 static uint8_t pwm_n = 0;
 
+__attribute__((unused))
 static void pwm_update(uint8_t n)
 {
   TCNT0 = 0;
   OCR0A = n / 2;
 }
 
+__attribute__((unused))
 static void pwm_start(uint8_t n)
 {
   TCCR0B = 0;
@@ -173,10 +175,36 @@ static void pwm_start(uint8_t n)
   TCCR0B = (1 << 3) | (5 << 0);
 }
 
+__attribute__((unused))
 static void pwm_stop(void)
 {
   TCCR0A = 0;
   TCCR0B = 0;
+}
+
+
+/* buttons */
+/* low logic level is pressed */
+
+#define BUT_DDR DDRD
+#define BUT_PORT PORTD
+#define BUT_PIN PIND
+#define BUT_CALIB_MASK (1 << 2)
+#define BUT_MINUS_MASK (1 << 3)
+#define BUT_PLUS_MASK (1 << 4)
+#define BUT_ALL_MASK (BUT_CALIB_MASK | BUT_MINUS_MASK | BUT_PLUS_MASK)
+
+static void but_setup(void)
+{
+  /* configure as input, disable pullup resistors */
+  BUT_DDR &= ~BUT_ALL_MASK;
+  BUT_PORT &= ~BUT_ALL_MASK;
+}
+
+static uint8_t but_read(void)
+{
+  /* inverted logic */
+  return (BUT_PIN ^ BUT_ALL_MASK) & BUT_ALL_MASK;
 }
 
 
@@ -197,14 +225,18 @@ static void calibrate(uint32_t* x)
 int main(void)
 {
 #define CONFIG_THRESH 2
+/* #define CONFIG_PIEZO */
 
   uint32_t calib_counter;
   uint32_t counter;
   uint32_t diff;
+  uint8_t but;
 
 #ifdef CONFIG_UART
   uart_setup();
 #endif /* CONFIG_UART */
+
+  but_setup();
 
   sei();
 
@@ -229,7 +261,9 @@ int main(void)
     {
       if (pwm_flags & PWM_FLAG_START)
       {
+#ifdef CONFIG_PIEZO
 	pwm_stop();
+#endif /* CONFIG_PIEZO */
 	pwm_flags &= ~PWM_FLAG_START;
 
 #ifdef CONFIG_UART
@@ -245,7 +279,9 @@ int main(void)
 
       if ((pwm_flags & PWM_FLAG_START) == 0)
       {
+#ifdef CONFIG_PIEZO
 	pwm_start((uint8_t)diff);
+#endif /* CONFIG_PIEZO */
 	pwm_flags |= PWM_FLAG_START;
 
 #ifdef CONFIG_UART
@@ -256,7 +292,9 @@ int main(void)
       }
       else if (pwm_n != (uint8_t)diff)
       {
+#ifdef CONFIG_PIEZO
 	pwm_update((uint8_t)diff);
+#endif /* CONFIG_PIEZO */
 	pwm_n = (uint8_t)diff;
 
 #ifdef CONFIG_UART
@@ -265,6 +303,17 @@ int main(void)
 	uart_write((uint8_t*)"\r\n", 2);
 #endif /* CONFIG_UART */
       }
+    }
+
+    /* buttons */
+    but = but_read();
+    if (but & BUT_CALIB_MASK)
+    {
+#ifdef CONFIG_UART
+      uart_write((uint8_t*)"CALIB\r\n", 7);
+#endif /* CONFIG_UART */
+
+      calibrate(&calib_counter);
     }
   }
 
