@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
@@ -7977,6 +7977,8 @@ Figure 3</text>
 <text x="116.84" y="-7.62" size="1.778" layer="97" align="center-right">but_minus</text>
 <text x="116.84" y="-15.24" size="1.778" layer="97" align="center-right">but_cal</text>
 <text x="116.84" y="-17.78" size="1.778" layer="97" align="center-right">but_cal</text>
+<text x="-2.54" y="-20.32" size="1.778" layer="97">C1, C2: use low drift capacitors (MLCC, C0G/NP0).
+Farnell ref: 2395768</text>
 </plain>
 <instances>
 <instance part="C1" gate="G$1" x="17.78" y="48.26"/>
